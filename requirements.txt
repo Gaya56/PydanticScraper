@@ -1,0 +1,6 @@
+pydantic-ai
+pydantic-ai[openai]
+mcp
+python-dotenv
+matplotlib
+requests
