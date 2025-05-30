@@ -7,12 +7,9 @@ from pydantic_ai.models.openai import OpenAIModel
 
 load_dotenv() # Call this at the beginning of your script
 
-# Set OpenAI environment variables to use DeepSeek
-os.environ["OPENAI_API_KEY"] = os.environ["DEEPSEEK_API_KEY"]
-os.environ["OPENAI_BASE_URL"] = "https://api.deepseek.com/v1"
-
-deepseek_chat_model = OpenAIModel( #define the base as open AI
-    model_name="deepseek-v3.1" # use the deepseek model and correct parameter name
+# Use OpenAI with the API key from .env file
+openai_model = OpenAIModel(
+    model_name="gpt-4o-mini"  # Using a reliable OpenAI model
 )
 
 # Define the MCP Servers
@@ -28,7 +25,7 @@ python_tools_server = MCPServerStdio(
 
 # Define the Agent with both MCP servers
 agent = Agent(
-    deepseek_chat_model, 
+    openai_model, 
     mcp_servers=[brave_server, python_tools_server],
     retries=3
 )
