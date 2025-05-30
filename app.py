@@ -1,13 +1,18 @@
 import os
 import asyncio
+from dotenv import load_dotenv # Add this import
 from pydantic_ai import Agent
 from pydantic_ai.mcp import MCPServerStdio
 from pydantic_ai.models.openai import OpenAIModel
 
+load_dotenv() # Call this at the beginning of your script
+
+# Set OpenAI environment variables to use DeepSeek
+os.environ["OPENAI_API_KEY"] = os.environ["DEEPSEEK_API_KEY"]
+os.environ["OPENAI_BASE_URL"] = "https://api.deepseek.com/v1"
+
 deepseek_chat_model = OpenAIModel( #define the base as open AI
-    'deepseek-chat',
-    base_url='https://api.deepseek.com',
-    api_key=os.environ["DEEPSEEK_API_KEY"],
+    model_name="deepseek-v3.1" # use the deepseek model and correct parameter name
 )
 
 # Define the MCP Servers
