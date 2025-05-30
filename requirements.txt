@@ -2,8 +2,5 @@ pydantic-ai
 pydantic-ai[openai]
 mcp
 python-dotenv
-exa-py
 matplotlib
-httpx
 requests
-dotenv
