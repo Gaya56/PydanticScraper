@@ -51,7 +51,6 @@ async def search_news(query: str) -> str:
 ## Switch Search Engines
 
 - `brave_search.py` - Current (Brave Search)
-- `Extra_Tools/exa_search.py` - Alternative (Exa Search)
 
 To switch: Update `app.py` line 16-18 to point to different search file.
 
