@@ -1,4 +1,4 @@
-# Pydantic AI + MCP Web Scraping Framework
+# PydanticScraper
 
 AI-driven web scraping using Pydantic AI + Model Context Protocol. Search the web and analyze data with simple Python commands.
 
