@@ -2,6 +2,7 @@ import os
 import asyncio
 from pydantic_ai import Agent
 from pydantic_ai.mcp import MCPServerStdio
+from pydantic_ai.models.openai import OpenAIModel
 
 deepseek_chat_model = OpenAIModel( #define the base as open AI
     'deepseek-chat',
@@ -10,9 +11,9 @@ deepseek_chat_model = OpenAIModel( #define the base as open AI
 )
 
 # Define the MCP Servers
-exa_server = MCPServerStdio(
+brave_server = MCPServerStdio(
     'python',
-    ['exa_search.py']
+    ['brave_search.py']
 )
 
 python_tools_server = MCPServerStdio(
@@ -23,7 +24,7 @@ python_tools_server = MCPServerStdio(
 # Define the Agent with both MCP servers
 agent = Agent(
     deepseek_chat_model, 
-    mcp_servers=[exa_server, python_tools_server],
+    mcp_servers=[brave_server, python_tools_server],
     retries=3
 )
 

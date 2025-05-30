@@ -5,4 +5,5 @@ python-dotenv
 exa-py
 matplotlib
 httpx
+requests
 dotenv
