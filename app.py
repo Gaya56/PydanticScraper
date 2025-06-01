@@ -45,10 +45,15 @@ network_tools_server = MCPServerStdio(
     ['pentesting_tools/network_tools.py']
 )
 
+report_tools_server = MCPServerStdio(
+    'python',
+    ['pentesting_tools/report_tools.py']
+)
+
 # Define the Agent with all MCP servers
 agent = Agent(
     model, 
-    mcp_servers=[brave_server, python_tools_server, recon_tools_server, network_tools_server],
+    mcp_servers=[brave_server, python_tools_server, recon_tools_server, network_tools_server, report_tools_server],
     retries=3,
     system_prompt="""You are a security analysis assistant. Before running any security tools, 
     ALWAYS ask for permission using this format:
