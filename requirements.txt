@@ -6,3 +6,4 @@ mcp
 python-dotenv
 matplotlib
 requests
+shcheck

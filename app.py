@@ -35,10 +35,15 @@ python_tools_server = MCPServerStdio(
     ['python_tools.py']
 )
 
-# Define the Agent with both MCP servers
+recon_tools_server = MCPServerStdio(
+    'python',
+    ['recon_tools.py']
+)
+
+# Define the Agent with all MCP servers
 agent = Agent(
     model, 
-    mcp_servers=[brave_server, python_tools_server],
+    mcp_servers=[brave_server, python_tools_server, recon_tools_server],
     retries=3
 )
 
