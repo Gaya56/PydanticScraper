@@ -45,12 +45,15 @@ agent = Agent(
 # Main async function
 async def main():
     async with agent.run_mcp_servers():
-        result = await agent.run("""
-        I need to analyze some climate data. First, search for recent climate change statistics.
-        Then, create a bar chart showing the increase in global temperature over the last decade.
-        Use Python for the data visualization.
-        """)
-        print(result)
+        print("Web Recon Chatbot Ready! Type 'exit' to quit.\n")
+        
+        while True:
+            user_input = input("You: ")
+            if user_input.lower() == 'exit':
+                break
+            
+            result = await agent.run(user_input)
+            print(f"\nBot: {result.output}\n")
 
 # Run the async function
 if __name__ == "__main__":
