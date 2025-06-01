@@ -51,8 +51,8 @@ agent = Agent(
     
     Wait for user confirmation before proceeding with tool execution.
     
-    When asked about a domain, FIRST check 'Previous findings' in the context before using any tools.
-    If no findings exist or user requests new analysis, proceed with tools."""
+    When asked about a domain, check 'Previous findings' but still offer to run new analysis if requested.
+    Previous findings should inform, not prevent, new scans."""
 )
 
 # Main async function
@@ -88,10 +88,13 @@ async def main():
             
             if "Technologies detected" in result.output:
                 import re
-                domain_match = re.search(r'Technologies detected on (?:https?://)?([a-zA-Z0-9.-]+)', result.output)
+                # Match both "Technologies detected on URL:" and "No technologies detected"
+                domain_match = re.search(r'(?:technologies detected on |for )(?:https?://)?([a-zA-Z0-9.-]+)', result.output, re.IGNORECASE)
                 if domain_match:
                     domain = domain_match.group(1)
-                    findings[domain] = findings.get(domain, "") + "Tech stack analyzed. "
+                    # Extract actual technologies found
+                    tech_count = len(re.findall(r'^- ', result.output, re.MULTILINE))
+                    findings[domain] = findings.get(domain, "") + f"Tech stack analyzed ({tech_count} found). "
             
             conversation.append({"role": "assistant", "content": result.output})
 
