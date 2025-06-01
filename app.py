@@ -44,7 +44,12 @@ recon_tools_server = MCPServerStdio(
 agent = Agent(
     model, 
     mcp_servers=[brave_server, python_tools_server, recon_tools_server],
-    retries=3
+    retries=3,
+    system_prompt="""You are a security analysis assistant. Before running any security tools, 
+    ALWAYS ask for permission using this format:
+    'I'll need to run [tool_name] on [target]. This will [brief description]. Continue? (y/n)'
+    
+    Wait for user confirmation before proceeding with tool execution."""
 )
 
 # Main async function
@@ -52,13 +57,21 @@ async def main():
     async with agent.run_mcp_servers():
         print("Web Recon Chatbot Ready! Type 'exit' to quit.\n")
         
+        conversation = []
         while True:
             user_input = input("You: ")
             if user_input.lower() == 'exit':
                 break
             
-            result = await agent.run(user_input)
+            conversation.append({"role": "user", "content": user_input})
+            
+            # Include last 4 messages for context
+            context = "\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation[-4:]])
+            
+            result = await agent.run(f"Previous context:\n{context}\n\nCurrent message: {user_input}")
             print(f"\nBot: {result.output}\n")
+            
+            conversation.append({"role": "assistant", "content": result.output})
 
 # Run the async function
 if __name__ == "__main__":
