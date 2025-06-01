@@ -58,6 +58,8 @@ async def main():
         print("Web Recon Chatbot Ready! Type 'exit' to quit.\n")
         
         conversation = []
+        findings = {}  # Store findings by domain
+        
         while True:
             user_input = input("You: ")
             if user_input.lower() == 'exit':
@@ -65,11 +67,21 @@ async def main():
             
             conversation.append({"role": "user", "content": user_input})
             
-            # Include last 4 messages for context
-            context = "\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation[-4:]])
+            # Include findings in context
+            findings_summary = "\n".join([f"{domain}: {info}" for domain, info in findings.items()])
+            context = f"Previous findings:\n{findings_summary}\n\nRecent messages:\n"
+            context += "\n".join([f"{msg['role']}: {msg['content']}" for msg in conversation[-4:]])
             
-            result = await agent.run(f"Previous context:\n{context}\n\nCurrent message: {user_input}")
+            result = await agent.run(f"{context}\n\nCurrent message: {user_input}")
             print(f"\nBot: {result.output}\n")
+            
+            # Extract domain and update findings (simple pattern matching)
+            if "Headers for" in result.output or "Security Header Analysis" in result.output:
+                import re
+                domain_match = re.search(r'for `?([a-zA-Z0-9.-]+)`?:', result.output)
+                if domain_match:
+                    domain = domain_match.group(1)
+                    findings[domain] = findings.get(domain, "") + f"\nHeaders checked. "
             
             conversation.append({"role": "assistant", "content": result.output})
 
