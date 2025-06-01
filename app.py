@@ -5,6 +5,7 @@ from pydantic_ai import Agent
 from pydantic_ai.mcp import MCPServerStdio
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.models.anthropic import AnthropicModel
+from pydantic_ai.models.google import GoogleModel
 
 load_dotenv() # Call this at the beginning of your script
 
@@ -13,6 +14,8 @@ model_type = os.getenv("AI_MODEL", "openai").lower()
 
 if model_type == "claude":
     model = AnthropicModel(model_name="claude-3-opus-20240229")
+elif model_type == "gemini":
+    model = GoogleModel(model_name="gemini-1.5-flash")
 elif model_type == "deepseek":
     model = OpenAIModel(
         model_name="deepseek-chat",
