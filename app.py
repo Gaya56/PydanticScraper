@@ -51,8 +51,8 @@ agent = Agent(
     
     Wait for user confirmation before proceeding with tool execution.
     
-    When asked about a domain, FIRST check 'Previous findings' in the context before using any tools. 
-    Only search or run new tools if no previous data exists."""
+    When asked about a domain, FIRST check 'Previous findings' in the context before using any tools.
+    If no findings exist or user requests new analysis, proceed with tools."""
 )
 
 # Main async function
