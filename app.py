@@ -49,7 +49,10 @@ agent = Agent(
     ALWAYS ask for permission using this format:
     'I'll need to run [tool_name] on [target]. This will [brief description]. Continue? (y/n)'
     
-    Wait for user confirmation before proceeding with tool execution."""
+    Wait for user confirmation before proceeding with tool execution.
+    
+    When asked about a domain, FIRST check 'Previous findings' in the context before using any tools. 
+    Only search or run new tools if no previous data exists."""
 )
 
 # Main async function
@@ -78,10 +81,10 @@ async def main():
             # Extract domain and update findings (simple pattern matching)
             if "Headers for" in result.output or "Security Header Analysis" in result.output:
                 import re
-                domain_match = re.search(r'for `?([a-zA-Z0-9.-]+)`?:', result.output)
+                domain_match = re.search(r'headers for `?(?:https?://)?([a-zA-Z0-9.-]+)`?', result.output, re.IGNORECASE)
                 if domain_match:
                     domain = domain_match.group(1)
-                    findings[domain] = findings.get(domain, "") + f"\nHeaders checked. "
+                    findings[domain] = findings.get(domain, "") + f"Headers checked (HSTS, CSP, etc). "
             
             conversation.append({"role": "assistant", "content": result.output})
 
