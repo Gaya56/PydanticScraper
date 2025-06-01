@@ -86,6 +86,13 @@ async def main():
                     domain = domain_match.group(1)
                     findings[domain] = findings.get(domain, "") + f"Headers checked (HSTS, CSP, etc). "
             
+            if "Technologies detected" in result.output:
+                import re
+                domain_match = re.search(r'Technologies detected on (?:https?://)?([a-zA-Z0-9.-]+)', result.output)
+                if domain_match:
+                    domain = domain_match.group(1)
+                    findings[domain] = findings.get(domain, "") + "Tech stack analyzed. "
+            
             conversation.append({"role": "assistant", "content": result.output})
 
 # Run the async function
