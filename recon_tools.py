@@ -72,5 +72,36 @@ async def detect_technologies(url: str) -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 
+@mcp.tool()
+async def check_ssl_certificate(domain: str) -> str:
+    """Analyze SSL certificate details."""
+    domain = domain.replace('https://', '').replace('http://', '').split('/')[0]
+    
+    try:
+        # Simple approach - just get the text output
+        result = subprocess.run(
+            f'echo | openssl s_client -connect {domain}:443 -servername {domain} 2>/dev/null | openssl x509 -noout -dates -subject -issuer',
+            shell=True,
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        
+        if result.returncode == 0 and result.stdout:
+            output = f"SSL Certificate for {domain}:\n\n{result.stdout}"
+            
+            # Basic checks
+            if 'notAfter=' in result.stdout:
+                output += "\n✓ Valid certificate found"
+            if 'Let\'s Encrypt' in result.stdout:
+                output += "\n→ Free certificate (Let's Encrypt)"
+                
+            return output
+        
+        return f"No SSL certificate found for {domain} (may not support HTTPS)"
+        
+    except Exception as e:
+        return f"Error checking SSL: {str(e)}"
+
 if __name__ == "__main__":
     mcp.run()

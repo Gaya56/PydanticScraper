@@ -96,6 +96,13 @@ async def main():
                     tech_count = len(re.findall(r'^- ', result.output, re.MULTILINE))
                     findings[domain] = findings.get(domain, "") + f"Tech stack analyzed ({tech_count} found). "
             
+            if "SSL Certificate Analysis" in result.output:
+                import re
+                domain_match = re.search(r'SSL Certificate Analysis for ([a-zA-Z0-9.-]+)', result.output)
+                if domain_match:
+                    domain = domain_match.group(1)
+                    findings[domain] = findings.get(domain, "") + "SSL cert checked. "
+            
             conversation.append({"role": "assistant", "content": result.output})
 
 # Run the async function
