@@ -4,13 +4,22 @@ from dotenv import load_dotenv # Add this import
 from pydantic_ai import Agent
 from pydantic_ai.mcp import MCPServerStdio
 from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.models.anthropic import AnthropicModel
 
 load_dotenv() # Call this at the beginning of your script
 
-# Use OpenAI with the API key from .env file
-openai_model = OpenAIModel(
-    model_name="gpt-4o-mini"  # Using a reliable OpenAI model
-)
+# Use model based on environment variable
+model_type = os.getenv("AI_MODEL", "openai").lower()
+
+if model_type == "claude":
+    model = AnthropicModel(model_name="claude-3-opus-20240229")
+elif model_type == "deepseek":
+    model = OpenAIModel(
+        model_name="deepseek-chat",
+        base_url="https://api.deepseek.com/v1"
+    )
+else:
+    model = OpenAIModel(model_name="gpt-4o-mini")
 
 # Define the MCP Servers
 brave_server = MCPServerStdio(
@@ -25,7 +34,7 @@ python_tools_server = MCPServerStdio(
 
 # Define the Agent with both MCP servers
 agent = Agent(
-    openai_model, 
+    model, 
     mcp_servers=[brave_server, python_tools_server],
     retries=3
 )

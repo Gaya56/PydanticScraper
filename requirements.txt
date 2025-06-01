@@ -1,5 +1,6 @@
 pydantic-ai
 pydantic-ai[openai]
+pydantic-ai[anthropic]
 mcp
 python-dotenv
 matplotlib
